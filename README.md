@@ -16,7 +16,7 @@ This project is still early in its development, so its functionality is rather l
 
 ### Project Components
 
-This project consists of two main components, the server and client(s).
+This project consists of two main components, the server and client(s).  **This repository contains only the server code.  Corresponding client code can be found in [johnmmason/pimonitor-sensor](https://github.com/johnmmason/pimonitor-sensor)**
 
 #### The Server
 
