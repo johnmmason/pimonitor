@@ -1,9 +1,5 @@
-from flask import Flask, request
-import json
 import psycopg2
 import configparser
-
-app = Flask(__name__)
 
 def db_connect():
     Config = configparser.ConfigParser()
@@ -44,16 +40,3 @@ def load(data):
     finally:
         if conn is not None:
             conn.close()
-
-@app.route('/', methods=['POST'])
-def result():
-    if request.is_json:
-        content = request.get_json()
-        load(content)
-        ack = '[' + content['timestamp'] + '] Successfully received and inserted into database.'
-    else:
-        ack = 'An unexpected error occured.  Try again.'
-    return ack
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
