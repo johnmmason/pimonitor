@@ -1,4 +1,7 @@
 # johnmmason / pimonitor
+
+![image](https://raw.githubusercontent.com/johnmmason/pimonitor/master/media/splash.png)
+
 piMonitor is a simple application for recording, storing, and sharing sensor data.
 
 ## Project Overview
