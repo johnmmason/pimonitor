@@ -1,9 +1,9 @@
-# pimonitor
-A simple service for collecting, storing, and sharing sensor data.
+# johnmmason / pimonitor
+piMonitor is a simple application for recording, storing, and sharing sensor data.
 
-### Project Overview
+## Project Overview
 
-Convenience and peace-of-mind are often cited as primary reasons for bringing IOT sensors into the home.  In the past few years, the consumer market has been flooded with a variety of internet-connected home gadgets which aim to make it *as easy as possible* to turn your home into a "smart home".  However, many electronics and computer hobbyists find these products lacking in key areas.  For example,
+Consumer grade IOT sensors offer convenience and peace-of mind, but lack features important to tech hobbyists such as
 
 * Sensor flexibility,
 * customization,
@@ -30,14 +30,70 @@ The client code was developed to run on a Raspberry Pi, and has been tested on b
 
 The client script reads data from attached sensors (currently supported, a DHT22 temperature and humidity sensor), compiles data into a JSON string, and then sends it to the API via a HTTP POST request.
 
-### Setup and Installation
+## Setup and Installation
 
-This section coming soon.
+### Database Setup
+
+You will need the following
+* PostgreSQL with a database for this project (this can, but does not have to be, the default database)
+* A user with adequate permissions to perform CRUD operations on the project database (this can, but does not have to, be the default user)
+* Appropriate configuration to allow remote connections to your database
+
+Open a SQL prompt using a method of your choice and create a table for this project:
+```sql
+CREATE TABLE home_data(
+    id SERIAL,
+    location VARCHAR(30),
+    timestamp TIMESTAMP,
+    temperature REAL,
+    humidity real
+)
+```
+
+### Server Setup
+
+First, update your system and install required dependencies:
+```bash
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install python3-dev python3-pip python3-venv -y
+```
+
+Clone this repository:
+```bash
+git clone https://github.com/johnmmason/pimonitor.git
+```
+
+Navigate to the project directory:
+```bash
+cd pimonitor
+pwd
+```
+
+Create a Python virtual environment and install Python packages:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Create `sample_config.ini` and configure database settings:
+```bash
+cp sample_config.ini config.ini
+emacs config.ini
+```
+
+Set environment variables for Flask:
+```bash
+export FLASK_APP=pimonitor
+export FLASK_ENV=development
+```
+
+Run the app using the built-in Flask development server:
+```bash
+flask run --host=0.0.0.0
+```
 
 ### Features Coming Soon
-
-* Upload current client code (coming extremely soon)
-* Finish server setup instructions
 * Split server code into modules to allow for easy modification and customization
 * Add data monitoring functionality to allow for alerts when sensor values cross a predefined threshold
 * Add email reporting functionality to share sensor data at a predefined interval
