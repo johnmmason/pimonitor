@@ -93,6 +93,8 @@ Run the app using the built-in Flask development server:
 flask run --host=0.0.0.0
 ```
 
+Now, configure a production WSGI server to serve the application.  piMonitor has been tested with Gunicorn.
+
 ### Features Coming Soon
 * Split server code into modules to allow for easy modification and customization
 * Add data monitoring functionality to allow for alerts when sensor values cross a predefined threshold
