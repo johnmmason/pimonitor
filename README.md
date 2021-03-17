@@ -35,6 +35,8 @@ The client script reads data from attached sensors (currently supported, a DHT22
 
 ## Setup and Installation
 
+### Container Setup
+
 If you haven't already, install [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
 
 Clone this repository and navigate to the project's root directory:
@@ -49,6 +51,20 @@ Launch the service using docker-compose:
 ```
 docker-compose up -d
 ```
+
+### Creating an API key:
+
+First, launch an interactive terminal in the API container:
+```
+docker exec -it pimonitor_api_1 /bin/bash
+```
+
+Run the API key generation script:
+```
+python3 pimonitor/apikey.py
+```
+
+Make sure to save the generated API key, as it will only be shown once!
 
 ### Features Coming Soon
 * Split server code into modules to allow for easy modification and customization
