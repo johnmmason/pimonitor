@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  api:
+    build: api
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: pimonitor
+      POSTGRES_PASSWORD: sample
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./api/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "5432:5432"
+      
+volumes:
+  db-data:
+    driver: local
