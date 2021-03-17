@@ -8,12 +8,14 @@ import json
 def result():
     if request.is_json:
         content = request.get_json()
-        load(content)
-        ack = '[' + content['timestamp'] + '] Successfully received and inserted into database.'
+        if load(content) is not None:
+            ack = '[' + content['timestamp'] + '] Successfully received and inserted into database.'
+        else:
+            ack = 'Invalid API Key'
     else:
-        ack = 'An unexpected error occured.  Try again.'
+        ack = 'Content was not json'
     return ack
 
 @app.route('/index')
 def index():
-    return 'Hello, World!'    
+    return 'Hello, World!'
