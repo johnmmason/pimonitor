@@ -23,9 +23,9 @@ This project consists of two main components, the server and client(s).  **This 
 
 #### The Server
 
-The server can either be hosted locally or on a cloud instance such as AWS.
-
 The server consists of a Flask-based WSGI application which accepts JSON data (later referred to as "the api") from the sensors and stores the data in a PostgreSQL database.
+
+The server can be easily run through Docker.
 
 #### The Client
 
@@ -35,68 +35,20 @@ The client script reads data from attached sensors (currently supported, a DHT22
 
 ## Setup and Installation
 
-### Database Setup
+If you haven't already, install [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
 
-You will need the following
-* PostgreSQL with a database for this project (this can, but does not have to be, the default database)
-* A user with adequate permissions to perform CRUD operations on the project database (this can, but does not have to, be the default user)
-* Appropriate configuration to allow remote connections to your database
+Clone this repository and navigate to the project's root directory:
 
-Open a SQL prompt using a method of your choice and create a table for this project:
-```sql
-CREATE TABLE home_data(
-    id SERIAL,
-    location VARCHAR(30),
-    timestamp TIMESTAMP,
-    temperature REAL,
-    humidity real
-)
 ```
-
-### Server Setup
-
-First, update your system and install required dependencies:
-```bash
-sudo apt-get update && sudo apt-get upgrade -y
-sudo apt-get install python3-dev python3-pip python3-venv -y
-```
-
-Clone this repository:
-```bash
 git clone https://github.com/johnmmason/pimonitor.git
-```
-
-Navigate to the project directory:
-```bash
 cd pimonitor
-pwd
 ```
 
-Create a Python virtual environment and install Python packages:
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+Launch the service using docker-compose:
 
-Create `sample_config.ini` and configure database settings:
-```bash
-cp sample_config.ini config.ini
-emacs config.ini
 ```
-
-Set environment variables for Flask:
-```bash
-export FLASK_APP=pimonitor
-export FLASK_ENV=development
+docker-compose up -d
 ```
-
-Run the app using the built-in Flask development server:
-```bash
-flask run --host=0.0.0.0
-```
-
-Now, configure a production WSGI server to serve the application.  piMonitor has been tested with Gunicorn.
 
 ### Features Coming Soon
 * Split server code into modules to allow for easy modification and customization
