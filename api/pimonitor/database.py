@@ -6,62 +6,47 @@ def db_connect():
     Config.read("config.ini")
 
     if Config.sections():
-        try:
-            conn = psycopg2.connect(
-                host=Config.get('postgres','host'),
-                database=Config.get('postgres', 'database'),
-                user=Config.get('postgres', 'user'),
-                password=Config.get('postgres', 'password'),
-                port=Config.get('postgres', 'port')
-            )
-
-            return conn
-        except (Exception, psycopg2.DatabaseError) as error:
-            raise(error)
+        conn = psycopg2.connect(
+            host=Config.get('postgres','host'),
+            database=Config.get('postgres', 'database'),
+            user=Config.get('postgres', 'user'),
+            password=Config.get('postgres', 'password'),
+            port=Config.get('postgres', 'port')
+        )
+        return conn
     else:
         return None
 
 def load(data):
-    if validate_hash(data['api_hash']):
-        try:
-            conn = db_connect()
-            cursor = conn.cursor()
+    assert 'location' in data.keys()
+    assert 'timestamp' in data.keys()
+    assert len(data['sensors']) > 0
+
+    conn = db_connect()
+    cursor = conn.cursor()
+        
+    SQL = "INSERT INTO home_data (location, timestamp, temperature, humidity) \
+        VALUES (%s, %s, %s, %s);"
             
-            SQL = "INSERT INTO home_data (location, timestamp, temperature, humidity) VALUES (%s, %s, %s, %s);"
-            
-            for sensor in data['sensors']:
-                cursor.execute(SQL, (data['location'], data['timestamp'], sensor['temperature'], sensor['humidity']))
-                
-                conn.commit()
-                cursor.close()
-                
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-            
-        finally:
-            if conn is not None:
-                conn.close()
-            return True
-    else:
-        return None
+    for sensor in data['sensors']:
+        cursor.execute(SQL, (data['location'],
+                             data['timestamp'],
+                             sensor['temperature'],
+                             sensor['humidity']))                
+        conn.commit()
+
+    cursor.close()
+    conn.close()        
 
 def validate_hash(key_hash):
-    try:
-        conn = db_connect()
-        cursor = conn.cursor()
+    conn = db_connect()
+    cursor = conn.cursor()
 
-        SQL = "SELECT * FROM api_keys WHERE hash = (%s);"
+    SQL = "SELECT * FROM api_keys WHERE hash = (%s);"
 
-        cursor.execute(SQL, (key_hash,))
-        results = cursor.fetchall()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-
-    finally:
-        if conn is not None:
-            conn.close()
-
+    cursor.execute(SQL, (key_hash,))
+    results = cursor.fetchall()
+        
     if results:
         return True
     else:
